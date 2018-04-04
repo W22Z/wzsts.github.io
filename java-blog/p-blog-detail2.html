@@ -1,0 +1,81 @@
+
+页面描述
+右侧 改为 弹框并 超大编辑区域 /富文本编辑 / 评论区域
+<link href="css.css" rel="stylesheet" type="text/css" /> 
+<div id="title-div">
+<B>wzskyline</B>
+</div>
+<hr>
+
+
+<div id="one-div">   
+ 
+   类别:<input id="one-category"/> 
+   标题:<input id="one-title"/> 
+   时间:<input id="one-time" readonly="readonly"/><br>
+   正文:<br><textarea  id="one-record" ROWS=10  readonly="readonly"/>   </textarea><br><br>
+</div> 
+ 
+<hr>
+
+   评论:list<br><textarea  id="one-record" ROWS=10  />   </textarea><br><br>
+    <button  onClick="update( )"> 上一篇博客</button>
+    <button  onClick="update( )"> 提交</button> 
+    <button  onClick="update( )"> 点赞</button>
+   <button   onClick="update( )"> 添加收藏</button>
+   <button  onClick="update( )"> 返回上一页</button>
+   <button  onClick="update( )"> 下一篇博客</button>
+</div> 
+
+<xmp>
+
+ 
+
+
+
+
+</xmp>
+<script src="jquery.js"></script>
+<script>
+
+var page1=1;
+var page2=1;
+var page3=1; 
+var serchtitle="";
+$(function() { 
+    $.ajax( {
+        "url" : "http://wzskyline.5amb.xyz/wzskyline/API-3-one.php?id="+id,
+        "type" : "get", 
+        "dataType" : "json",
+        "success" : function(data) { 
+		   $("#one-id").val(data.id);
+           $("#one-title").val(data.title);
+		   $("#one-time").val(data.recordtime);
+		   $("#one-record").val(data.record);
+        },
+        "error":function (xhr,txt){
+            console.log(xhr+","+txt); 
+            alert("发生错误");
+        }
+    }); 
+});
+   
+   
+    function update( ) { 
+   $.ajax( {
+        "url" : "http://wzskyline.5amb.xyz/wzskyline/API-4-update.php",
+        "type" : "get",
+        "data" : {"id": $("#one-id").val(),"title": $("#one-title").val(),"record": $("#one-record").val()},
+        "dataType" : "json",
+        "success" : function(data) { 
+              window.location.reload();
+        },
+        "error":function (xhr,txt){
+            console.log(xhr+","+txt); 
+            alert("发生错误");
+        }
+    });
+   }
+   
+</script>
+

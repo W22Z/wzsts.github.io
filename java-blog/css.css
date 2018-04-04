@@ -1,0 +1,16 @@
+#add-record{
+width:160px;
+margin-left:40px;
+padding-left:20px;
+
+}
+#one-record{
+width:95%;
+margin-left:40px;
+padding-left:20px;
+ 
+}
+ 
+.left { background: #fff; height: 400px;width: 20%;  float: left; } 
+.main { background: #9cf;height:  400px;    } 
+.right { background:  #fff;height:  400px; width: 40%; float: right; } 

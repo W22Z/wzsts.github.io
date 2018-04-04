@@ -1,0 +1,143 @@
+﻿ 
+<link href="css.css" rel="stylesheet" type="text/css" /> 
+<div id="title-div">
+<B>wzskyline</B>
+</div>
+<hr>
+
+<div class="left">
+  <div id="add-div">
+ 
+   好友昵称:<input id="add-title"/><br> <br> 
+    <button id="add-button" style="margin-left:40px;" onClick="add()"> 添加好友</button><br> <br> 
+  </div>
+  <div id="friend-list">好友列表<br></div> 
+</div> 
+
+<div class="right">
+ 查询好友:<input id="serch" onblur="mixserch(this.value)" /><br>
+   <div id="serch-div"> </div>
+</div> 
+<div class="main">
+消息列表<br> 
+<div id="main-list1">  </div> 
+<hr>
+<div id="one-div">  
+    
+   编辑消息:<br><textarea  id="one-msg"  >   </textarea><br><br>
+    <button id="one-button" style="margin-left:40px;" onClick="update( )"> 发送消息</button>
+</div>
+</div> 
+ 
+</div> 
+
+
+</div>
+
+
+<hr>
+
+
+
+<xmp>
+
+ 
+
+
+
+
+</xmp>
+<script src="jquery.js"></script>
+<script>
+
+var page1=1;  
+var serchtitle="";
+$(function() {  
+	 mainserch();   
+});
+    
+   function mainserch( ) { 
+       $("#friend-list").empty(); 
+      $.get( "http://localhost/java-blog/Api-11-object.php",{kind:2,page:page1},function(data){
+         if(data.allpage>0){
+		   $("#friend-list").append("找到好友列表<br>");
+		 var str="";
+		 $.each(data.list,function(index,obj){
+		  $("#friend-list").append(obj.id);
+		  $("#friend-list").append('<span onClick="msg('+obj.id+')">'+obj.id+'</span><br>');
+		    
+		});
+		
+		  str+='当前'+page1+'页/总'+data.allpage+'页';
+		  str+='<button   id="prebutton2"  onclick="prepage2()">前一页</button>';
+		  str+='<button   id="nextbutton2"  onclick="nextpage2()" >后一页</button><br>';
+		   $("#friend-list").append(str); 
+		    if(page2<=1) $("#prebutton2").hide(); 
+		    if(page2>=data.allpage) $("#nextbutton2").hide();
+		 
+		 }else{
+		    $("#friend-list").append("暂无数据"); 
+		 }
+		
+     },"json");
+	 
+   }
+   function prepage2() {    page2--; mainserch2();  }
+   function nextpage2(){    page2++; mainserch2();  }
+   
+  function add( ) {  
+    $.ajax( {
+        "url" : "http://wzskyline.5amb.xyz/wzskyline/API-1-add.php",
+        "type" : "get",
+        "data" : {"title":$("#add-title").val(),"record":$("#add-record").val()},
+        "dataType" : "json",
+        "success" : function(data) {  
+           window.location.reload();
+        },
+        "error":function (xhr,txt){
+            console.log(xhr+","+txt); 
+            alert("发生错误添加失败");
+        }
+    });
+
+   }
+    function msg( id) {  
+     $("#main-list1").empty(); 
+      $.get( "http://localhost/java-blog/Api-11-object.php",{kind:3,page:page1},function(data){
+         if(data.allpage>0){
+		   $("#main-list1").append("js计算我们互访已有xy天了<button>查看博客</button><button>取消好友</button><br>");
+		 var str="";
+		 $.each(data.list,function(index,obj){
+		  $("#main-list1").append(obj.id); 
+		    
+		});
+		
+		  str+='<br>当前'+page1+'页/总'+data.allpage+'页';
+		  str+='<button   id="prebutton2"  onclick="prepage2()">前一页</button>';
+		  str+='<button   id="nextbutton2"  onclick="nextpage2()" >后一页</button><br>';
+		   $("#main-list1").append(str); 
+		    if(page2<=1) $("#prebutton2").hide(); 
+		    if(page2>=data.allpage) $("#nextbutton2").hide();
+		 
+		 }else{
+		    $("#main-list1").append("暂无数据"); 
+		 }
+		
+     },"json");
+
+   }
+    
+   function  mixserch(serch){ 
+   	    $("#serch-div").empty();
+        $.get( "http://wzskyline.5amb.xyz/wzskyline/API-5-mixserch.php?serch="+serch,function(data){
+        $.each(data,function(index,obj){
+		  $("#serch-div").append(obj.recordtime );
+		  $("#serch-div").append('<span onClick="edit('+obj.id+')">'+obj.record+'</span><br>');
+		   
+		});
+		
+		
+    },"json");
+   }
+</script>
+

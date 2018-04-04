@@ -1,0 +1,87 @@
+
+页面描述
+右侧 改为 弹框并 超大编辑区域 /富文本编辑 /
+显示与查询基本不变 /单一数据源需要跳转到新页面
+<link href="css.css" rel="stylesheet" type="text/css" /> 
+<div id="title-div">
+<B>wzskyline</B>
+</div>
+<hr>
+
+
+<div id="one-div">   
+
+  类别 : 
+ <div style="position:relative;margin-left:40px">
+<span style="margin-left:100px;width:18px;overflow:hidden;">
+<select id="select-title" style="width:118px;margin-left:-100px; height:30px"=  onchange="this.parentNode.nextSibling.value=this.value">
+<option value="0"> 0</option> 
+<option value="1"> 1</option> 
+</select></span><input id="add-category" value="0" style="width:100px; height:30px;position:absolute;left:0px;">
+
+ <input id="one-id" title=" 记录的ID值 " style="display:none"/> 
+   标题:<input id="one-title"/> 
+   时间:<input id="one-time" readonly="readonly"/><br>
+
+</div> 
+ 
+<hr>
+
+  
+   记录:<br><textarea  id="one-record" ROWS=10>   </textarea><br><br>
+    <button id="one-button" style="margin-left:40px;" onClick="update( )"> 更新博客</button>
+</div>
+ 
+
+<xmp>
+
+ 
+
+
+
+
+</xmp>
+<script src="jquery.js"></script>
+<script>
+
+var page1=1;
+var page2=1;
+var page3=1; 
+var serchtitle="";
+$(function() { 
+    $.ajax( {
+        "url" : "http://wzskyline.5amb.xyz/wzskyline/API-3-one.php?id="+id,
+        "type" : "get", 
+        "dataType" : "json",
+        "success" : function(data) { 
+		   $("#one-id").val(data.id);
+           $("#one-title").val(data.title);
+		   $("#one-time").val(data.recordtime);
+		   $("#one-record").val(data.record);
+        },
+        "error":function (xhr,txt){
+            console.log(xhr+","+txt); 
+            alert("发生错误");
+        }
+    }); 
+});
+   
+   
+    function update( ) { 
+   $.ajax( {
+        "url" : "http://wzskyline.5amb.xyz/wzskyline/API-4-update.php",
+        "type" : "get",
+        "data" : {"id": $("#one-id").val(),"title": $("#one-title").val(),"record": $("#one-record").val()},
+        "dataType" : "json",
+        "success" : function(data) { 
+              window.location.reload();
+        },
+        "error":function (xhr,txt){
+            console.log(xhr+","+txt); 
+            alert("发生错误");
+        }
+    });
+   }
+   
+</script>
+

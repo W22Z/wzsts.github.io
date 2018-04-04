@@ -1,0 +1,225 @@
+﻿
+页面描述
+ 好友博客
+<link href="css.css" rel="stylesheet" type="text/css" /> 
+<div id="title-div">
+<B>wzskyline</B>
+</div>
+<hr>
+
+<div class="left">
+  <div id="add-div">
+    
+   内容:<br><textarea  id="add-record" ROWS=10>   </textarea><br><br>
+    <button id="add-button" style="margin-left:40px;" onClick="add()"> 添加留言</button>
+  </div>
+
+</div> 
+<div class="right">
+ 查询:<input id="serch" onblur="mixserch(this.value)" /><br>
+   <div id="serch-div"> </div>
+</div> 
+<div class="main">
+
+<div id="main-list1">最近的博客<br>
+ 
+</div> 
+<div id="main-list2">我的主打专题<br>
+</div> 
+
+<div id="main-list3">按类别 查询<br>
+</div> 
+
+
+</div>
+
+
+<hr>
+
+ 
+
+<xmp>
+
+ 
+
+
+
+
+</xmp>
+<script src="jquery.js"></script>
+<script>
+
+var page1=1;
+var page2=1;
+var page3=1; 
+var serchtitle="";
+$(function() { 
+     titleserch();  
+	 mainserch1();  
+     mainserch2(); 
+});
+  function titleserch( ) {  
+       $.get( "http://wzskyline.5amb.xyz/wzskyline/API-6-title.php",function(data){
+ 
+	    $.each(data,function(index,obj){
+		   $("#title-div").append('<span title="'+obj.title+'" onClick="titleserch2( this)">   '+obj.title+'  </span>');
+		   $("#select-title").append('<option value="'+obj.title+'"> '+obj.title+'</option>  ');
+		});
+	    
+		
+      },"json");
+	 
+   }
+   
+   
+   
+   function titleserch2(th ) {   //原先传title 但是中文没有效果
+     serchtitle=th.title;
+    list3() ;
+   }
+   function list3(  ) {   //原先传title 但是中文没有效果
+       
+      $("#main-list3").empty();
+       $.get( "http://wzskyline.5amb.xyz/wzskyline/API-6-title2.php",{page:page3,title:serchtitle},function(data){
+	     if(data.allpage>0){
+		 var str="";
+		 $.each(data.list,function(index,obj){
+		  $("#main-list3").append(obj.recordtime);
+		  $("#main-list3").append('<span onClick="edit('+obj.id+')">'+obj.record+'</span><br>');
+		    
+		});
+		
+		  str+='当前'+page3+'页/总'+data.allpage+'页';
+		  str+='<button   id="prebutton3"   onclick="prepage3( )">前一页</button>';
+		  str+='<button   id="nextbutton3"   onclick="nextpage3( )" >后一页</button><br><HR>';
+		   $("#main-list3").append(str); 
+		    if(page3<=1) $("#prebutton3").hide(); 
+		    if(page3>=data.allpage) $("#nextbutton3").hide();
+		 
+		 }else{
+		    $("#main-list3").append("暂无数据"); 
+		 }
+		
+      },"json");
+	 
+   }
+    function prepage3( ) {    page3--; list3( );  }
+    function nextpage3( ){    page3++; list3( );  }
+   
+  function mainserch1( ) { 
+       $("#main-list1").empty(); 
+      $.get( "http://wzskyline.5amb.xyz/wzskyline/API-2-list1.php",{page:page1},function(data){
+         if(data.allpage>0){
+		 var str="";
+		 $.each(data.list,function(index,obj){
+		  $("#main-list1").append(obj.recordtime);
+		  $("#main-list1").append('<span onClick="edit('+obj.id+')">'+obj.record+'</span><br>');
+		    
+		});
+		
+		  str+='当前'+page1+'页/总'+data.allpage+'页';
+		  str+='<button   id="prebutton1"  onclick="prepage1()">前一页</button>';
+		  str+='<button   id="nextbutton1"  onclick="nextpage1()" >后一页</button><br><HR>';
+		   $("#main-list1").append(str); 
+		    if(page1<=1) $("#prebutton1").hide(); 
+		    if(page1>=data.allpage) $("#nextbutton1").hide();
+		 
+		 }else{
+		    $("#main-list1").append("暂无数据"); 
+		 }
+		
+     },"json");
+	 
+   }
+   function prepage1() {    page1--; mainserch1();  }
+   function nextpage1(){    page1++; mainserch1();  }
+   function mainserch2( ) { 
+       $("#main-list2").empty(); 
+      $.get( "http://wzskyline.5amb.xyz/wzskyline/API-2-list2.php",{page:page2},function(data){
+         if(data.allpage>0){
+		 var str="";
+		 $.each(data.list,function(index,obj){
+		  $("#main-list2").append(obj.recordtime);
+		  $("#main-list2").append('<span onClick="edit('+obj.id+')">'+obj.record+'</span><br>');
+		    
+		});
+		
+		  str+='当前'+page2+'页/总'+data.allpage+'页';
+		  str+='<button   id="prebutton2"  onclick="prepage2()">前一页</button>';
+		  str+='<button   id="nextbutton2"  onclick="nextpage2()" >后一页</button><br><HR>';
+		   $("#main-list2").append(str); 
+		    if(page2<=1) $("#prebutton2").hide(); 
+		    if(page2>=data.allpage) $("#nextbutton2").hide();
+		 
+		 }else{
+		    $("#main-list2").append("暂无数据"); 
+		 }
+		
+     },"json");
+	 
+   }
+   function prepage2() {    page2--; mainserch2();  }
+   function nextpage2(){    page2++; mainserch2();  }
+   
+  function add( ) {  
+    $.ajax( {
+        "url" : "http://wzskyline.5amb.xyz/wzskyline/API-1-add.php",
+        "type" : "get",
+        "data" : {"title":$("#add-title").val(),"record":$("#add-record").val()},
+        "dataType" : "json",
+        "success" : function(data) {  
+           window.location.reload();
+        },
+        "error":function (xhr,txt){
+            console.log(xhr+","+txt); 
+            alert("发生错误添加失败");
+        }
+    });
+
+   }
+  function edit( id) { 
+   $.ajax( {
+        "url" : "http://wzskyline.5amb.xyz/wzskyline/API-3-one.php?id="+id,
+        "type" : "get", 
+        "dataType" : "json",
+        "success" : function(data) { 
+		   $("#one-id").val(data.id);
+           $("#one-title").val(data.title);
+		   $("#one-time").val(data.recordtime);
+		   $("#one-record").val(data.record);
+        },
+        "error":function (xhr,txt){
+            console.log(xhr+","+txt); 
+            alert("发生错误");
+        }
+    });
+   }
+    function update( ) { 
+   $.ajax( {
+        "url" : "http://wzskyline.5amb.xyz/wzskyline/API-4-update.php",
+        "type" : "get",
+        "data" : {"id": $("#one-id").val(),"title": $("#one-title").val(),"record": $("#one-record").val()},
+        "dataType" : "json",
+        "success" : function(data) { 
+              window.location.reload();
+        },
+        "error":function (xhr,txt){
+            console.log(xhr+","+txt); 
+            alert("发生错误");
+        }
+    });
+   }
+   function  mixserch(serch){ 
+   	    $("#serch-div").empty();
+        $.get( "http://wzskyline.5amb.xyz/wzskyline/API-5-mixserch.php?serch="+serch,function(data){
+        $.each(data,function(index,obj){
+		  $("#serch-div").append(obj.recordtime );
+		  $("#serch-div").append('<span onClick="edit('+obj.id+')">'+obj.record+'</span><br>');
+		   
+		});
+		
+		
+    },"json");
+   }
+</script>
+
