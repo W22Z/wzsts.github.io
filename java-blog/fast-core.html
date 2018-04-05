@@ -1,0 +1,140 @@
+-- 博客表	blog(id,uid,category,title,content,blogtime,praise)				 	 
+-- 用户表	user(id,nickname,name,pwd,email,detail,img,val,state)								
+-- 关系表	ship（id,uid,fid,shiptime）								
+-- 管理员表	admin(id,nickname,name,pwd,email,detail,state)								
+-- 消息表        msg(id,msgf,msgt,msg,msgtime,state)							 		
+-- 附件表	file(id,bid,filename,filepath,filevalue,state）								
+-- 评论表   	comments(id,bid,uid,pcid,comment,commenttime)								
+-- 收藏表	collect(id,uid,bid,collecttime)	
+页面上要显示的VO 有两类
+一对一
+多对一
+
+封装的方法
+public class HelloWorld {
+	public static void main(String[] args) {
+	 for (int i=0;i<30;i++){
+         
+       	System.out.println("/* api-"+i+" todo :    */");  
+     }
+    String str="http://www.anycodes.cn/zh/";
+      str="id,uid,category,title,content,blogtime,praise";
+	colsResults(str);
+	  str="id,nickname,name,pwd,email,detail,img,val,state";
+	colsResults(str);
+	  str="id,uid,fid,shiptime";
+	colsResults(str);
+	  str="id,nickname,name,pwd,email,detail,state";
+	colsResults(str);
+	  str="id,msgf,msgt,msg,msgtime,state";
+	colsResults(str);
+	  str="id,bid,filename,filepath,filevalue,state";
+	colsResults(str);
+	  str="id,bid,uid,pcid,comment,commenttime";
+	colsResults(str);
+ 	  str="id,uid,bid,collecttime";
+	colsResults(str);
+   }
+    public static void colsResults(String strs){
+        
+    String [] cols=strs.split(",");
+		String str="@Results({";
+        for(String col : cols){
+            str+="@Result(property = \""+ col +"\", column = \""+ col +"\"),";
+        } 
+        str =str.substring(0,str.length()-1)+"})";
+			System.out.println(str);
+	}
+}
+	
+单一对象映射集
+@Results({@Result(property = "id", column = "id"),@Result(property = "uid", column = "uid"),@Result(property = "category", column = "category"),@Result(property = "title", column = "title")
+   ,@Result(property = "content", column = "content"),@Result(property = "blogtime", column = "blogtime"),@Result(property = "praise", column = "praise")})
+@Results({@Result(property = "id", column = "id"),@Result(property = "nickname", column = "nickname"),@Result(property = "name", column = "name"),@Result(property = "pwd", column = "pwd")
+   ,@Result(property = "email", column = "email"),@Result(property = "detail", column = "detail"),@Result(property = "img", column = "img"),@Result(property = "val", column = "val"),@Result(property = "state", column = "state")})
+@Results({@Result(property = "id", column = "id"),@Result(property = "uid", column = "uid")
+   ,@Result(property = "fid", column = "fid"),@Result(property = "shiptime", column = "shiptime")})
+@Results({@Result(property = "id", column = "id"),@Result(property = "nickname", column = "nickname"),@Result(property = "name", column = "name")
+   ,@Result(property = "pwd", column = "pwd"),@Result(property = "email", column = "email"),@Result(property = "detail", column = "detail"),@Result(property = "state", column = "state")})
+@Results({@Result(property = "id", column = "id"),@Result(property = "msgf", column = "msgf"),@Result(property = "msgt", column = "msgt")
+   ,@Result(property = "msg", column = "msg"),@Result(property = "msgtime", column = "msgtime"),@Result(property = "state", column = "state")})
+@Results({@Result(property = "id", column = "id"),@Result(property = "bid", column = "bid"),@Result(property = "filename", column = "filename")
+  ,@Result(property = "filepath", column = "filepath"),@Result(property = "filevalue", column = "filevalue"),@Result(property = "state", column = "state")})
+@Results({@Result(property = "id", column = "id"),@Result(property = "bid", column = "bid"),@Result(property = "uid", column = "uid")
+  ,@Result(property = "pcid", column = "pcid"),@Result(property = "comment", column = "comment"),@Result(property = "commenttime", column = "commenttime")})
+@Results({@Result(property = "id", column = "id"),@Result(property = "uid", column = "uid")
+  ,@Result(property = "bid", column = "bid"),@Result(property = "collecttime", column = "collecttime")})
+  
+  WIN+P 分屏 显示  ，哈哈 ，新技能 get
+  https://www.cnblogs.com/1024zy/p/6344000.html
+  热部署,关于 编译选项
+  
+  
+--参照 UserMapper.java 优点 少文件，快捷  缺点同一对象 查询角度不同需要重写一份映射
+-- 格式  1.mapper
+--       2.funcname
+    @Insert("INSERT INTO USER(nick_name, user_code) VALUES(#{nickName}, #{userCode})")
+    int insertParam(@Param("nickName") String nickName, @Param("userCode") String userCode);
+    //博客相关
+	      @Select("select * from blog ")
+	      @Results({@Result(property = "id", column = "id"),@Result(property = "uid", column = "uid"),@Result(property = "category", column = "category"),@Result(property = "title", column = "title")
+          ,@Result(property = "content", column = "content"),@Result(property = "blogtime", column = "blogtime"),@Result(property = "praise", column = "praise")})
+	Map<String,Object> api-31-goodblog();	
+	       @Insert("INSERT INTO blog VALUES(#{nickName}, #{userCode})")
+	int api-32-blog(Blog newblog);	  
+          @Delete("DELETE FROM blog WHERE id =#{id}")
+	int api-33-blog(int id);
+	      @Select("select * from blog where id=#{id}")
+	      @Results({  @Result(property = "userId", column = "user_id")  })
+    Blog api-34-blog(int id);
+	      @Update("UPDATE user SET nick_name=#{nickName} WHERE user_id=#{userId}")
+	int api-35-blog(Blog upblog);
+	//收藏相关
+	      @Select("select * from collect where uid=#{uid}")
+	      @Results({@Result(property = "id", column = "id"),@Result(property = "uid", column = "uid")
+          ,@Result(property = "bid", column = "bid"),@Result(property = "collecttime", column = "collecttime")})  
+    Map<String,Object> api-36-collect(int uid);	
+	      @Select("select * from collect where id=#{id}")
+	      @Results({  @Result(property = "userId", column = "user_id")  })
+    Collect api-37-collect(int id);	
+	      @Insert("INSERT INTO collect VALUES(#{nickName}, #{userCode})")
+	int api-38-collect(Collect newCollect);
+	      @Delete("DELETE FROM collect WHERE id =#{id}")
+	int api-39-collect(int id);
+	//好友相关
+	      @Select("select * from ship where uid=#{uid}")
+	      @Results({@Result(property = "id", column = "id"),@Result(property = "uid", column = "uid")
+          ,@Result(property = "fid", column = "fid"),@Result(property = "shiptime", column = "shiptime")})
+    Map<String,Object> api-40-friend(int uid);	
+	      @Select("select * from User where id=#{id}")
+	      @Results({  @Result(property = "userId", column = "user_id")  })
+    User api-41-friend(int id);	
+	      @Insert("INSERT INTO ship VALUES(#{nickName}, #{userCode})")
+	int api-42-friend(Ship newship);
+	      @Delete("DELETE FROM ship WHERE id =#{id}")
+	int api-43-friend(int id);
+	//消息相关
+	      @Select("select * from msg where uid=#{uid}")
+	      @Results({@Result(property = "id", column = "id"),@Result(property = "msgf", column = "msgf"),@Result(property = "msgt", column = "msgt")
+          ,@Result(property = "msg", column = "msg"),@Result(property = "msgtime", column = "msgtime"),@Result(property = "state", column = "state")})
+    Map<String,Object> api-44-msg(int uid,int fid);
+	      @Insert("INSERT INTO msg VALUES(#{nickName}, #{userCode})")
+	int api-45-msg(Msg newmsg);
+	      @Update("UPDATE msg SET state='read' WHERE id=#{id}")
+	int api-46-msg(int id);
+	sql
+	
+	好友列表 [字段]不在页面中显示  较难点在于 提示新的消息...
+	nickname [id],  这个数据集先存放在js 页中  
+	当点击某好友后 
+	需要显示的是好友的信息 (js页中取一条) ,消息记录. ajax 取   select *from msg where uid=sessionuserid and fid=arguserid  order by msgtime asc 最近消息显示在下方
+    我的收藏列表
+    	
+	
+	 
+	我们control 接收参数与直接调用 与返回固定值
+	 
+	
+	
+	
+	
