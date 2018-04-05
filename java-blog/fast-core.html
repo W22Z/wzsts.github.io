@@ -75,6 +75,11 @@ public class HelloWorld {
 --       2.funcname
     @Insert("INSERT INTO USER(nick_name, user_code) VALUES(#{nickName}, #{userCode})")
     int insertParam(@Param("nickName") String nickName, @Param("userCode") String userCode);
+    //登陆注册
+	  @Select("select * from admin  where nackname = #{nick}")
+	   @Results({@Result(property = "id", column = "id"),@Result(property = "uid", column = "uid"),@Result(property = "category", column = "category"),@Result(property = "title", column = "title")
+          ,@Result(property = "content", column = "content"),@Result(property = "blogtime", column = "blogtime"),@Result(property = "praise", column = "praise")})
+	 int api-1-nickname(String name);			 
     //博客相关
 	      @Select("select * from blog ")
 	      @Results({@Result(property = "id", column = "id"),@Result(property = "uid", column = "uid"),@Result(property = "category", column = "category"),@Result(property = "title", column = "title")
